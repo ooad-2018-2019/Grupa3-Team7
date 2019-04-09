@@ -13,7 +13,8 @@ Upravljanje skladištima, te njihovim procesima je ključ poslovanja organizacij
 ## Funkcionalnosti
 
 - Administracija profila radnika na različitim nivoima pristupa
-- Registracija skladišta u centralizovani informacioni sistem
+- Registracija skladišta u informacioni sistem
+- Registracija firmi koje pristupaju skladištu
 - Raspoređivanje artikala po sektorima skladišta
 - Praćenje svakog artikla u skladištu
 - Naručivanje artikala iz skladišta
@@ -22,9 +23,11 @@ Upravljanje skladištima, te njihovim procesima je ključ poslovanja organizacij
 ## Procesi
 
 - Kreiranje računa uposlenika u skladištu i unos podataka o njima. Upravnik skladišta određuje uloge svakog od uposlenika
+- Kreiranje računa firmi koje koriste skladišta
 - Uvoz artikala koje firma želi skladištiti
 - Registracija artikala - unošenje podataka u sistem
-- Kategorizacija artikala te njihov raspored po sektorima skladišta
+- Kategorizacija artikala te njihov raspored po sektorima
+  skladišta
 - Prikazivanje dostupnih artikala na servisu, te obrada zahtjeva za njihovu narudžbu
 - Ispunjenje zahtjeva --> Slanje artikala sa specifikacijom pošiljke
 
