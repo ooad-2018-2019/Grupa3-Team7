@@ -17,19 +17,19 @@ Upravljanje skladištima, te njihovim procesima je ključ poslovanja organizacij
 - Registracija firmi koje pristupaju skladištu
 - Raspoređivanje artikala po sektorima skladišta
 - Praćenje svakog artikla u skladištu
-- Naručivanje artikala iz skladišta
+- Zahtjev za izvoz artikala iz skladišta
 - Izdavanje specifikacije pošiljke
 
 ## Procesi
 
-- Kreiranje računa uposlenika u skladištu i unos podataka o njima. Upravnik skladišta određuje uloge svakog od uposlenika
-- Kreiranje računa firmi koje koriste skladišta
-- Uvoz artikala koje firma želi skladištiti
-- Registracija artikala - unošenje podataka u sistem
+- Upravnik skladišta kreira račune uposlenika u skladištu i vrši unos podataka o njima
+- Firme koje žele koristiti usluge skladišta kreiraju sebi račun, a upravnik skladišta ih odobrava
+- Firme šalju zahtjev za uvoz artikala, te vrše dodavanje artikala ako ne postoje u skladištu
+- Radnik odobrava zahtjev za uvoz, a vrši kontrolu artikala i odobrava registraciju
 - Kategorizacija artikala te njihov raspored po sektorima
   skladišta
-- Prikazivanje dostupnih artikala na servisu, te obrada zahtjeva za njihovu narudžbu
-- Ispunjenje zahtjeva --> Slanje artikala sa specifikacijom pošiljke
+- Prikazivanje dostupnih artikala na servisu, te obrada zahtjeva za njihov izvoz
+- Ispunjenje zahtjeva - Izvoz artikala iz skladišta
 
 ## Akteri
 
