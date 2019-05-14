@@ -325,7 +325,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Kreiranje korisničkog računa uposlenika"
+					"name": "Kreiranje korisničkog računa radnika"
 				},
 				{
 					"_type": "UMLUseCase",
@@ -1202,7 +1202,7 @@
 											"top": 144.5,
 											"width": 154,
 											"height": 28,
-											"text": "Kreiranje korisničkog računa uposlenika",
+											"text": "Kreiranje korisničkog računa radnika",
 											"wordWrap": true
 										},
 										{
@@ -5329,7 +5329,7 @@
 											"top": 270.5,
 											"width": 103,
 											"height": 28,
-											"text": "Prijava radnika na sistem",
+											"text": "Prijava na sistem",
 											"wordWrap": true
 										},
 										{
@@ -6985,7 +6985,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Prijava radnika na sistem"
+					"name": "Prijava na sistem"
 				},
 				{
 					"_type": "UMLUseCase",
