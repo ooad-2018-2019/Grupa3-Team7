@@ -16,12 +16,6 @@ namespace WMS.Controllers
             return View();
         }
 
-        [Authorize]
-        public IActionResult Private()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
