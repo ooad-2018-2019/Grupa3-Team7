@@ -14,14 +14,16 @@ namespace WMS.Data
         {
         }
 
-        //public DbSet<>
         public DbSet<Firm> firms;
+        public DbSet<Warehouse> warehouses;
+        public DbSet<StorageSpace> storageSpaces;
+        public DbSet<ItemDetails> itemDetails;
+        public DbSet<Item> items;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Firm>().ToTable("Firms").HasAlternateKey(f => f.FirmName);
-            //modelBuilder.Entity<>().ToTable("Student");
         }
     }
 }

@@ -9,5 +9,6 @@ namespace WMS.Models
     public class Firm : IdentityUser
     {
         public string FirmName { get; set; }
+        public ICollection<StorageSpace> StorageSpaces { get; set; }
     }
 }
