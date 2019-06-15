@@ -7,6 +7,8 @@ namespace WMS.Models
 {
     public class Warehouse
     {
+        public double Capacity { get; set; }
+        public ICollection<StorageSpace> StorageSpaces { get; set; }
 
     }
 }
