@@ -7,5 +7,6 @@ namespace WMS.Models
 {
     public class Warehouse
     {
+
     }
 }
