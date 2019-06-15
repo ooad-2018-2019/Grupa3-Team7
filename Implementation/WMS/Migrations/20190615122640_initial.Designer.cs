@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMS.Data;
 
-namespace WMS.Data.Migrations
+namespace WMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190615100136_firmAttempt")]
-    partial class firmAttempt
+    [Migration("20190615122640_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

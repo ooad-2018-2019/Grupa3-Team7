@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WMS.Models;
@@ -14,16 +15,19 @@ namespace WMS.Data
         {
         }
 
-        public DbSet<Firm> firms;
-        public DbSet<Warehouse> warehouses;
-        public DbSet<StorageSpace> storageSpaces;
-        public DbSet<ItemDetails> itemDetails;
-        public DbSet<Item> items;
+        public DbSet<Firm> Firms { get; set; }
+        public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<StorageSpace> StorageSpaces { get; set; }
+        public DbSet<ItemDetails> ItemDetails { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<ItemCount> ItemCounts { get; set; }
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<ImportRequest> ImportRequests { get; set; }
+        public DbSet<ExportRequest> ExportRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Firm>().ToTable("Firms").HasAlternateKey(f => f.FirmName);
         }
     }
 }

@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 
 namespace WMS.Models
 {
-    public class Item
+    public class ImportRequest : Request
     {
-        public string Id { get; set; }
-        public ItemDetails ItemDetails { get; set; }
     }
 }
