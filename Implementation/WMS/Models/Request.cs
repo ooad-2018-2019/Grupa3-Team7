@@ -13,5 +13,7 @@ namespace WMS.Models
         public Firm Firm { get; set; }
         public bool Processed { get; set; }
         public ICollection<ItemCount> Items{ get; set; }
+        public StorageSpace StorageSpace { get; set; }
+
     }
 }
