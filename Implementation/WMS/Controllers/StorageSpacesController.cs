@@ -23,7 +23,19 @@ namespace WMS.Controllers
         // GET: StorageSpaces
         public async Task<IActionResult> Index()
         {
-            return View(await _context.StorageSpaces.ToListAsync());
+            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            ViewData["user"] = user.UserName;
+
+            if (!User.IsInRole("Manager") && !User.IsInRole("Employee"))
+            {
+                var res = await _context.StorageSpaces.Where(r => r.Firm.Id == user.Id).ToListAsync();
+                return View(res);
+            }
+            else
+            {
+                var x = await _context.StorageSpaces.ToListAsync();
+                return View(x);
+            }
         }
 
         // GET: StorageSpaces/Details/5
@@ -36,6 +48,13 @@ namespace WMS.Controllers
 
             var storageSpace = await _context.StorageSpaces
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            if(storageSpace.Firm.UserName != user.UserName)
+            {
+                return NotFound();
+            }
+
             if (storageSpace == null)
             {
                 return NotFound();
