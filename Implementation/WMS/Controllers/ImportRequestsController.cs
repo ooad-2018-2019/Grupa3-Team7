@@ -23,23 +23,22 @@ namespace WMS.Controllers
         public ImportRequestsController(ApplicationDbContext context)
         {
             _context = context;
-        
         }
 
         // GET: ImportRequests
         public async Task<IActionResult> Index()
         {
-            if (User.IsInRole("Firm") || User.IsInRole(null)) {
-                var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-                var x =  await _context.ImportRequests.Where(r => r.Firm.IdentityUser.Id == user.Id).ToListAsync();
-                ViewBag["user"] = user.Id;
-                return View(x);
-            }
-            else
+            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            ViewData["user"] = user.UserName;
+
+            if (!User.IsInRole("Manager") && !User.IsInRole("Employee"))
+            {
+                var res = await _context.ImportRequests.Where(r => r.Firm.IdentityUser.Id == user.Id).ToListAsync();
+                return View(res);
+            } else
             {
                 var x = await _context.ImportRequests.ToListAsync();
                 return View(x);
-
             }
         }
 
