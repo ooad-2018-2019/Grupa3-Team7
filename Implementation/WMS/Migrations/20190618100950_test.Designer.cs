@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMS.Models;
 
 namespace WMS.Migrations
 {
     [DbContext(typeof(WMSContext))]
-    partial class WMSContextModelSnapshot : ModelSnapshot
+    [Migration("20190618100950_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,9 +145,6 @@ namespace WMS.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
@@ -185,148 +184,6 @@ namespace WMS.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("WMSUser");
-                });
-
-            modelBuilder.Entity("WMS.Models.Item", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ItemDetailsUPC");
-
-                    b.Property<string>("StorageSpaceId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemDetailsUPC");
-
-                    b.HasIndex("StorageSpaceId");
-
-                    b.ToTable("Items");
-                });
-
-            modelBuilder.Entity("WMS.Models.ItemCount", b =>
-                {
-                    b.Property<int>("Count")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ItemUPC");
-
-                    b.Property<string>("RequestId");
-
-                    b.HasKey("Count");
-
-                    b.HasIndex("ItemUPC");
-
-                    b.HasIndex("RequestId");
-
-                    b.ToTable("ItemCounts");
-                });
-
-            modelBuilder.Entity("WMS.Models.ItemDetails", b =>
-                {
-                    b.Property<string>("UPC")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("ImageURI");
-
-                    b.Property<string>("Name");
-
-                    b.Property<double>("Volume");
-
-                    b.HasKey("UPC");
-
-                    b.ToTable("ItemDetails");
-                });
-
-            modelBuilder.Entity("WMS.Models.Request", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
-                    b.Property<string>("FirmId");
-
-                    b.Property<bool>("Processed");
-
-                    b.Property<DateTime>("RequestDate");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FirmId");
-
-                    b.ToTable("Requests");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Request");
-                });
-
-            modelBuilder.Entity("WMS.Models.StorageSpace", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<double>("Capacity");
-
-                    b.Property<string>("FirmId");
-
-                    b.Property<string>("WarehouseName");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FirmId");
-
-                    b.HasIndex("WarehouseName");
-
-                    b.ToTable("StorageSpaces");
-                });
-
-            modelBuilder.Entity("WMS.Models.Warehouse", b =>
-                {
-                    b.Property<string>("Name")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<double>("Capacity");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("Warehouses");
-                });
-
-            modelBuilder.Entity("WMS.Models.Employee", b =>
-                {
-                    b.HasBaseType("WMS.Areas.Identity.Data.WMSUser");
-
-                    b.HasDiscriminator().HasValue("Employee");
-                });
-
-            modelBuilder.Entity("WMS.Models.Firm", b =>
-                {
-                    b.HasBaseType("WMS.Areas.Identity.Data.WMSUser");
-
-                    b.Property<string>("FirmName");
-
-                    b.HasDiscriminator().HasValue("Firm");
-                });
-
-            modelBuilder.Entity("WMS.Models.ExportRequest", b =>
-                {
-                    b.HasBaseType("WMS.Models.Request");
-
-                    b.HasDiscriminator().HasValue("ExportRequest");
-                });
-
-            modelBuilder.Entity("WMS.Models.ImportRequest", b =>
-                {
-                    b.HasBaseType("WMS.Models.Request");
-
-                    b.HasDiscriminator().HasValue("ImportRequest");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -372,46 +229,6 @@ namespace WMS.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WMS.Models.Item", b =>
-                {
-                    b.HasOne("WMS.Models.ItemDetails", "ItemDetails")
-                        .WithMany()
-                        .HasForeignKey("ItemDetailsUPC");
-
-                    b.HasOne("WMS.Models.StorageSpace")
-                        .WithMany("Items")
-                        .HasForeignKey("StorageSpaceId");
-                });
-
-            modelBuilder.Entity("WMS.Models.ItemCount", b =>
-                {
-                    b.HasOne("WMS.Models.ItemDetails", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemUPC");
-
-                    b.HasOne("WMS.Models.Request")
-                        .WithMany("MyProperty")
-                        .HasForeignKey("RequestId");
-                });
-
-            modelBuilder.Entity("WMS.Models.Request", b =>
-                {
-                    b.HasOne("WMS.Models.Firm", "Firm")
-                        .WithMany()
-                        .HasForeignKey("FirmId");
-                });
-
-            modelBuilder.Entity("WMS.Models.StorageSpace", b =>
-                {
-                    b.HasOne("WMS.Models.Firm", "Firm")
-                        .WithMany("StorageSpaces")
-                        .HasForeignKey("FirmId");
-
-                    b.HasOne("WMS.Models.Warehouse")
-                        .WithMany("StorageSpaces")
-                        .HasForeignKey("WarehouseName");
                 });
 #pragma warning restore 612, 618
         }

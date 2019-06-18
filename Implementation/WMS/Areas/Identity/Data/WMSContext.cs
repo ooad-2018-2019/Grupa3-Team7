@@ -16,12 +16,20 @@ namespace WMS.Models
         {
         }
 
+        public DbSet<Firm> Firms { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<StorageSpace> StorageSpaces { get; set; }
+        public DbSet<ItemDetails> ItemDetails { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<ItemCount> ItemCounts { get; set; }
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<ImportRequest> ImportRequests { get; set; }
+        public DbSet<ExportRequest> ExportRequests { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
         }
     }
 }
