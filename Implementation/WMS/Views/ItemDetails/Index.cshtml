@@ -31,10 +31,9 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+        <tr style="border-bottom: 1px solid lightgray">
             <td>
                 <img style="max-width:64px;height:auto" src=" @Html.DisplayFor(modelItem => item.ImageURI)" alt="NO IMAGE!" />
-
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)

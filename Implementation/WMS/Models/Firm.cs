@@ -10,6 +10,7 @@ namespace WMS.Models
 {
     public class Firm : WMSUser
     {
+        [Display(Name = "Firm")]
         public string FirmName { get; set; }
         public ICollection<StorageSpace> StorageSpaces { get; set; }
     }

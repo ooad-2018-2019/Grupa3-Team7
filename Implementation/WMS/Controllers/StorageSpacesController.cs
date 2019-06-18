@@ -38,31 +38,6 @@ namespace WMS.Controllers
             }
         }
 
-        // GET: StorageSpaces/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var storageSpace = await _context.StorageSpaces
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            if(storageSpace.Firm.UserName != user.UserName)
-            {
-                return NotFound();
-            }
-
-            if (storageSpace == null)
-            {
-                return NotFound();
-            }
-
-            return View(storageSpace);
-        }
-
         // GET: StorageSpaces/Create
         public IActionResult Create()
         {
@@ -78,6 +53,8 @@ namespace WMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+                storageSpace.Firm = _context.Firms.Where(firm => firm.Id == user.Id).FirstOrDefault();
                 _context.Add(storageSpace);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
