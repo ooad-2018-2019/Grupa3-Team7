@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
 <h1>Edit</h1>
@@ -25,6 +26,48 @@
         </form>
     </div>
 </div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ItemDetails.ImageURI)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ItemDetails.UPC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.FirstOrDefault().ItemDetails.Name)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items != null)
+        {
+            foreach (var item in Model.Items)
+            {
+        <tr>
+            <td>
+                <img style="max-width:64px" src="@Html.DisplayNameFor(model => item.ItemDetails.ImageURI)"/>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemDetails.UPC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemDetails.Name)
+            </td>
+        </tr>
+            }
+        }
+    </tbody>
+</table>
 
 <div>
     <a asp-action="Index">Back to List</a>
