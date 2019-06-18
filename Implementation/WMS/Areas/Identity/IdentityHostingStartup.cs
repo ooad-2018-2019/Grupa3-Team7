@@ -15,16 +15,6 @@ namespace WMS.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => {
-                services.AddDbContext<WMSContext>(options =>
-                    options.UseSqlServer(
-                        context.Configuration.GetConnectionString("AzureConnection")));
-
-                services.AddDefaultIdentity<WMSUser>().
-                    AddRoles<IdentityRole>()
-                    .AddDefaultUI(UIFramework.Bootstrap4)
-                    .AddEntityFrameworkStores<WMSContext>();
-            });
         }
     }
 }

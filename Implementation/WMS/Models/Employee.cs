@@ -8,5 +8,7 @@ namespace WMS.Models
 {
     public class Employee : WMSUser
     {
+        public string FullName { get; set; }
+        public DateTime HireDate { get; set; }
     }
 }
