@@ -12,6 +12,6 @@ namespace WMS.Models
         public DateTime RequestDate { get; set; }
         public Firm Firm { get; set; }
         public bool Processed { get; set; }
-        public ICollection<ItemCount> MyProperty { get; set; }
+        public ICollection<ItemCount> Items{ get; set; }
     }
 }
