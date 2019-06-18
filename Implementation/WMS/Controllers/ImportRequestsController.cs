@@ -23,7 +23,16 @@ namespace WMS.Controllers
         // GET: ImportRequests
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ImportRequests.ToListAsync());
+            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            if(!User.IsInRole("Manager") && !User.IsInRole("Employee"))
+            {
+                var res = await _context.ImportRequests.Where(r => r.Firm.Id == user.Id).ToListAsync();
+                return View(res);
+            }
+            else
+            {
+                return View(await _context.ImportRequests.ToListAsync());
+            }
         }
 
         // GET: ImportRequests/Details/5
@@ -36,6 +45,12 @@ namespace WMS.Controllers
 
             var importRequest = await _context.ImportRequests
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+
+            if(importRequest.Firm.UserName != user.UserName)
+            {
+                return NotFound();
+            }
             if (importRequest == null)
             {
                 return NotFound();
