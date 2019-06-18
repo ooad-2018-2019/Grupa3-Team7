@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMS.Models;
 
 namespace WMS.Migrations
 {
     [DbContext(typeof(WMSContext))]
-    partial class WMSContextModelSnapshot : ModelSnapshot
+    [Migration("20190618145039_storageSpaceMod")]
+    partial class storageSpaceMod
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,13 +260,9 @@ namespace WMS.Migrations
 
                     b.Property<DateTime>("RequestDate");
 
-                    b.Property<string>("StorageSpaceId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FirmId");
-
-                    b.HasIndex("StorageSpaceId");
 
                     b.ToTable("Requests");
 
@@ -409,10 +407,6 @@ namespace WMS.Migrations
                     b.HasOne("WMS.Models.Firm", "Firm")
                         .WithMany()
                         .HasForeignKey("FirmId");
-
-                    b.HasOne("WMS.Models.StorageSpace", "StorageSpace")
-                        .WithMany()
-                        .HasForeignKey("StorageSpaceId");
                 });
 
             modelBuilder.Entity("WMS.Models.StorageSpace", b =>
