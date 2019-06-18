@@ -11,11 +11,11 @@ using WMS.Models;
 namespace WMS.Controllers
 {
     [Authorize]
-    public class ImportRequestsController : Controller
+    public class RequestsController : Controller
     {
         private readonly WMSContext _context;
 
-        public ImportRequestsController(WMSContext context)
+        public RequestsController(WMSContext context)
         {
             _context = context;
         }
