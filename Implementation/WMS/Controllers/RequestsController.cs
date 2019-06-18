@@ -62,6 +62,9 @@ namespace WMS.Controllers
         // GET: ImportRequests/Create
         public IActionResult Create()
         {
+            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            var storageSpaces = _context.StorageSpaces.Where(sp => sp.Firm.Id == user.Id && sp.Available);
+            ViewBag.StorageSpace = new SelectList(storageSpaces, "Id", "Name");
             return View();
         }
 

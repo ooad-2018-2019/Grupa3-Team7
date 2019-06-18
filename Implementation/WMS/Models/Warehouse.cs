@@ -11,6 +11,5 @@ namespace WMS.Models
         [Key]
         public string Name { get; set; }
         public double Capacity { get; set; }
-        public ICollection<StorageSpace> StorageSpaces { get; set; }
     }
 }
