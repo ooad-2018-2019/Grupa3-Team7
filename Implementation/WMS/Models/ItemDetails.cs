@@ -13,6 +13,7 @@ namespace WMS.Models
         public string Name { get; set; }
         public double Volume { get; set; }
         public string Description { get; set; }
+        [Display(Name="Image")]
         public string ImageURI { get; set; }
 
     }
