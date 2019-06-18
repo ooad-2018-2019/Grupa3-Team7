@@ -10,5 +10,6 @@ namespace WMS.Models
     {
         public string FullName { get; set; }
         public DateTime HireDate { get; set; }
+        public bool IsManager { get; set; }
     }
 }

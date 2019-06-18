@@ -29,7 +29,7 @@ namespace WMS.Models
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(builder);            
         }
     }
 }
