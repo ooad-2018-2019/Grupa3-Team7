@@ -22,7 +22,7 @@ namespace WMS.Models
                 return usedUp;
             }
         }
-
+        public bool Available { get; set; }
         public ICollection<Item> Items { get; set; }
         public Firm Firm{ get; set; }
     }
