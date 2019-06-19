@@ -60,50 +60,19 @@ namespace WMS.Controllers
             return View(storageSpace);
         }
 
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var storageSpace = await _context.StorageSpaces.FindAsync(id);
+            var storageSpace = await _context.StorageSpaces.FirstOrDefaultAsync(m => m.Id == id);
             if (storageSpace == null)
             {
                 return NotFound();
             }
-            return View(storageSpace);
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, StorageSpace storageSpace)
-        {
-            if (id != storageSpace.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(storageSpace);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StorageSpaceExists(storageSpace.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
             return View(storageSpace);
         }
 

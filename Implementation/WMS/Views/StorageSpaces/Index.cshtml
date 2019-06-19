@@ -52,7 +52,7 @@
                         @if (!item.Available)
                         {<a asp-action="Approve" asp-route-id="@item.Id">Approve</a> <span>|</span>}
                     }
-                    <a asp-action="Edit" asp-route-id="@item.Id">Open</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Dispose</a>
                 </td>
             </tr>
