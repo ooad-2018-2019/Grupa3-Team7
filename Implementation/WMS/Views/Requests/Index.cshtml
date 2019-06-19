@@ -39,20 +39,12 @@
             </td>
             <td>
                 @if (User.IsInRole("Manager") || User.IsInRole("Employee"))
-                {   
-                <span>
-                    <a asp-action="Approve" asp-route-id="@item.Id">Approve</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action = "Delete" asp-route-id ="@item.Id">Dispose</a>
-                </span>
-                }  
-                else
                 {
-                <span>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </span>
+                    @if (!item.Processed)
+                    {<a asp-action="Approve" asp-route-id="@item.Id">Approve</a> <span>|</span>}
                 }
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

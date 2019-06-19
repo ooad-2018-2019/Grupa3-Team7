@@ -16,6 +16,7 @@ namespace WMS.Models
 
         public ICollection<ItemCount> Items{ get; set; }
 
+        [Required]
         [Display(Name = "Storage Space")]
         public string StorageSpaceId { get; set; }
         public StorageSpace StorageSpace { get; set; }
