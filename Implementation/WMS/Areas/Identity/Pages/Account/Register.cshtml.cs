@@ -78,6 +78,7 @@ namespace WMS.Areas.Identity.Pages.Account
             {
                 var user = new Firm { UserName = Input.UserName, Email = Input.Email, FirmName = Input.FirmName };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                await _userManager.AddToRoleAsync(user, "Firm");
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

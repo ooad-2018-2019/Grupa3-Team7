@@ -20,15 +20,13 @@ namespace WMS.Controllers
             _context = context;
         }
 
-        // GET: StorageSpaces
         public async Task<IActionResult> Index()
         {
-            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            ViewData["user"] = user.UserName;
+            ViewData["user"] = User.Identity.Name;
 
-            if (!User.IsInRole("Manager") && !User.IsInRole("Employee"))
+            if (User.IsInRole("Firm"))
             {
-                var res = await _context.StorageSpaces.Where(r => r.Firm.Id == user.Id).ToListAsync();
+                var res = await _context.StorageSpaces.Where(r => r.Firm.UserName == User.Identity.Name).ToListAsync();
                 return View(res);
             }
             else
@@ -38,23 +36,23 @@ namespace WMS.Controllers
             }
         }
 
-        // GET: StorageSpaces/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: StorageSpaces/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Capacity")] StorageSpace storageSpace)
+        public async Task<IActionResult> Create(StorageSpace storageSpace)
         {
             if (ModelState.IsValid)
             {
-                var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-                storageSpace.Firm = _context.Firms.Where(firm => firm.Id == user.Id).FirstOrDefault();
+                var firm = _context.Firms.Where(f => f.UserName == User.Identity.Name).FirstOrDefault();
+                if(firm == null)
+                {
+                    return NotFound();
+                }
+                storageSpace.Firm = firm;
                 _context.Add(storageSpace);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -62,7 +60,6 @@ namespace WMS.Controllers
             return View(storageSpace);
         }
 
-        // GET: StorageSpaces/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -78,12 +75,9 @@ namespace WMS.Controllers
             return View(storageSpace);
         }
 
-        // POST: StorageSpaces/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Capacity")] StorageSpace storageSpace)
+        public async Task<IActionResult> Edit(string id, StorageSpace storageSpace)
         {
             if (id != storageSpace.Id)
             {
@@ -113,7 +107,6 @@ namespace WMS.Controllers
             return View(storageSpace);
         }
 
-        // GET: StorageSpaces/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -131,7 +124,6 @@ namespace WMS.Controllers
             return View(storageSpace);
         }
 
-        // POST: StorageSpaces/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

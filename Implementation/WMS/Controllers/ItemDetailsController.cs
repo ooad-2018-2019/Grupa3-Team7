@@ -20,13 +20,11 @@ namespace WMS.Controllers
             _context = context;
         }
 
-        // GET: ItemDetails
         public async Task<IActionResult> Index()
         {
             return View(await _context.ItemDetails.ToListAsync());
         }
 
-        // GET: ItemDetails/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -44,15 +42,11 @@ namespace WMS.Controllers
             return View(itemDetails);
         }
 
-        // GET: ItemDetails/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: ItemDetails/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UPC,Name,Volume,Description,ImageURI")] ItemDetails itemDetails)
@@ -66,7 +60,6 @@ namespace WMS.Controllers
             return View(itemDetails);
         }
 
-        // GET: ItemDetails/Delete/5
         [Authorize(Roles ="Manager")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -85,7 +78,6 @@ namespace WMS.Controllers
             return View(itemDetails);
         }
 
-        // POST: ItemDetails/Delete/5
         [Authorize(Roles = "Manager")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

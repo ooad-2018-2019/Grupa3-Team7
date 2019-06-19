@@ -20,14 +20,12 @@ namespace WMS.Controllers
             _context = context;
         }
 
-
         public async Task<IActionResult> Index()
         {
-            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             if(!User.IsInRole("Manager") && !User.IsInRole("Employee"))
             {
-                var import = await _context.ImportRequests.Where(r => r.Firm.Id == user.Id).Include(r => r.StorageSpace).ToListAsync();
-                var export = await _context.ExportRequests.Where(r => r.Firm.Id == user.Id).Include(r => r.StorageSpace).ToListAsync();
+                var import = await _context.ImportRequests.Where(r => r.Firm.UserName == User.Identity.Name).Include(r => r.StorageSpace).ToListAsync();
+                var export = await _context.ExportRequests.Where(r => r.Firm.UserName == User.Identity.Name).Include(r => r.StorageSpace).ToListAsync();
                 var requests = new List<Request>();
                 requests.AddRange(import);
                 requests.AddRange(export);
@@ -44,7 +42,6 @@ namespace WMS.Controllers
             }
         }
 
-        // GET: Requests/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -62,29 +59,22 @@ namespace WMS.Controllers
             return View(request);
         }
 
-        // GET: Requests/Create
         public IActionResult CreateImport()
         {
-            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            var storageSpaces = _context.StorageSpaces.Where(sp => sp.Firm.Id == user.Id && sp.Available);
+            var storageSpaces = _context.StorageSpaces.Where(sp => sp.Firm.UserName == User.Identity.Name && sp.Available);
             ViewBag.StorageSpace = new SelectList(storageSpaces, "Id", "Name");
             return View();
         }
 
         public IActionResult CreateExport()
         {
-            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-            var storageSpaces = _context.StorageSpaces.Where(sp => sp.Firm.Id == user.Id && sp.Available);
+            var storageSpaces = _context.StorageSpaces.Where(sp => sp.Firm.UserName == User.Identity.Name && sp.Available);
             ViewBag.StorageSpace = new SelectList(storageSpaces, "Id", "Name");
             return View();
         }
 
-        // POST: Requests/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Bind("Id,RequestDate,Processed,StorageSpace,Firm")]
         public async Task<IActionResult> CreateImport(ImportRequest importRequest)
         {
             if (ModelState.IsValid)
@@ -101,7 +91,6 @@ namespace WMS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Bind("Id,RequestDate,Processed")] 
         public async Task<IActionResult> CreateExport(ExportRequest exportRequest)
         {
             if (ModelState.IsValid)
