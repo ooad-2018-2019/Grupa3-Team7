@@ -7,15 +7,15 @@
 
 <h1>Create</h1>
 
-<h4>Request</h4>
+<h4>Import Request</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="CreateImport">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="StorageSpace" class="control-label"></label>
-                <select asp-for="StorageSpace" class="form-control" asp-items="ViewBag.StorageSpace"></select>
+                <label asp-for="StorageSpaceId" class="control-label"></label>
+                <select asp-for="StorageSpaceId" class="form-control" asp-items="ViewBag.StorageSpace"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -20,22 +20,31 @@ namespace WMS.Controllers
             _context = context;
         }
 
-        // GET: ImportRequests
+
         public async Task<IActionResult> Index()
         {
             var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             if(!User.IsInRole("Manager") && !User.IsInRole("Employee"))
             {
-                var res = await _context.ImportRequests.Where(r => r.Firm.Id == user.Id).ToListAsync();
-                return View(res);
+                var import = await _context.ImportRequests.Where(r => r.Firm.Id == user.Id).Include(r => r.StorageSpace).ToListAsync();
+                var export = await _context.ExportRequests.Where(r => r.Firm.Id == user.Id).Include(r => r.StorageSpace).ToListAsync();
+                var requests = new List<Request>();
+                requests.AddRange(import);
+                requests.AddRange(export);
+                return View(requests);
             }
             else
             {
-                return View(await _context.ImportRequests.ToListAsync());
+                var import = await _context.ImportRequests.Include(r => r.StorageSpace).ToListAsync();
+                var export = await _context.ExportRequests.Include(r => r.StorageSpace).ToListAsync();
+                var requests = new List<Request>();
+                requests.AddRange(import);
+                requests.AddRange(export);
+                return View(requests);
             }
         }
 
-        // GET: ImportRequests/Details/5
+        // GET: Requests/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -43,24 +52,18 @@ namespace WMS.Controllers
                 return NotFound();
             }
 
-            var importRequest = await _context.ImportRequests
+            var request = await _context.Requests
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
-
-            if(importRequest.Firm.UserName != user.UserName)
-            {
-                return NotFound();
-            }
-            if (importRequest == null)
+            if (request == null)
             {
                 return NotFound();
             }
 
-            return View(importRequest);
+            return View(request);
         }
 
-        // GET: ImportRequests/Create
-        public IActionResult Create()
+        // GET: Requests/Create
+        public IActionResult CreateImport()
         {
             var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
             var storageSpaces = _context.StorageSpaces.Where(sp => sp.Firm.Id == user.Id && sp.Available);
@@ -68,15 +71,27 @@ namespace WMS.Controllers
             return View();
         }
 
-        // POST: ImportRequests/Create
+        public IActionResult CreateExport()
+        {
+            var user = _context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            var storageSpaces = _context.StorageSpaces.Where(sp => sp.Firm.Id == user.Id && sp.Available);
+            ViewBag.StorageSpace = new SelectList(storageSpaces, "Id", "Name");
+            return View();
+        }
+
+        // POST: Requests/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RequestDate,Processed")] ImportRequest importRequest)
+        // [Bind("Id,RequestDate,Processed,StorageSpace,Firm")]
+        public async Task<IActionResult> CreateImport(ImportRequest importRequest)
         {
             if (ModelState.IsValid)
             {
+                var firm = _context.Firms.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+                importRequest.Firm = firm;
+                importRequest.RequestDate = DateTime.Now;
                 _context.Add(importRequest);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -84,30 +99,52 @@ namespace WMS.Controllers
             return View(importRequest);
         }
 
-        // GET: ImportRequests/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        // [Bind("Id,RequestDate,Processed")] 
+        public async Task<IActionResult> CreateExport(ExportRequest exportRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                var firm = _context.Firms.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+                exportRequest.Firm = firm;
+                exportRequest.RequestDate = DateTime.Now;
+                _context.Add(exportRequest);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(exportRequest);
+        }
+
+        public async Task<IActionResult> Approve(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var importRequest = await _context.ImportRequests.FindAsync(id);
-            if (importRequest == null)
+            ImportRequest import = await _context.ImportRequests.FirstOrDefaultAsync(m => m.Id == id);
+            ExportRequest export = await _context.ExportRequests.FirstOrDefaultAsync(m => m.Id == id);
+
+            if(import != null)
+            {
+                return View(import);
+            }
+            else if(export != null)
+            {
+                return View(export);
+            }
+            else
             {
                 return NotFound();
             }
-            return View(importRequest);
         }
 
-        // POST: ImportRequests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,RequestDate,Processed")] ImportRequest importRequest)
+        public async Task<IActionResult> Approve(string id, ImportRequest request)
         {
-            if (id != importRequest.Id)
+            if (id != request.Id)
             {
                 return NotFound();
             }
@@ -116,12 +153,13 @@ namespace WMS.Controllers
             {
                 try
                 {
-                    _context.Update(importRequest);
+                    request.Processed = true;
+                    _context.Update(request);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ImportRequestExists(importRequest.Id))
+                    if (!RequestExists(request.Id))
                     {
                         return NotFound();
                     }
@@ -132,10 +170,11 @@ namespace WMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(importRequest);
+
+            return View(request);
         }
 
-        // GET: ImportRequests/Delete/5
+        // GET: Requests/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -143,30 +182,30 @@ namespace WMS.Controllers
                 return NotFound();
             }
 
-            var importRequest = await _context.ImportRequests
+            var request = await _context.Requests
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (importRequest == null)
+            if (request == null)
             {
                 return NotFound();
             }
 
-            return View(importRequest);
+            return View(request);
         }
 
-        // POST: ImportRequests/Delete/5
+        // POST: Requests/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var importRequest = await _context.ImportRequests.FindAsync(id);
-            _context.ImportRequests.Remove(importRequest);
+            var request = await _context.Requests.FindAsync(id);
+            _context.Requests.Remove(request);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ImportRequestExists(string id)
+        private bool RequestExists(string id)
         {
-            return _context.ImportRequests.Any(e => e.Id == id);
+            return _context.Requests.Any(e => e.Id == id);
         }
     }
 }
