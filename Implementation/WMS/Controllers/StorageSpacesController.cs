@@ -129,8 +129,16 @@ namespace WMS.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var storageSpace = await _context.StorageSpaces.FindAsync(id);
-            _context.StorageSpaces.Remove(storageSpace);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.StorageSpaces.Remove(storageSpace);
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
