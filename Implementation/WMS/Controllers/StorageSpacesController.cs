@@ -26,12 +26,19 @@ namespace WMS.Controllers
 
             if (User.IsInRole("Firm"))
             {
-                var res = await _context.StorageSpaces.Where(r => r.Firm.UserName == User.Identity.Name).Include(sp => sp.Firm).Include(sp => sp.Items).ToListAsync();
+                var res = await _context.StorageSpaces
+                    .Where(sp => sp.Firm.UserName == User.Identity.Name)
+                    .Include(sp => sp.Firm)
+                    .Include(sp => sp.Items).ThenInclude(i => i.ItemDetails)
+                    .ToListAsync();
                 return View(res);
             }
             else
             {
-                var x = await _context.StorageSpaces.ToListAsync();
+                var x = await _context.StorageSpaces
+                    .Include(sp => sp.Firm)
+                    .Include(sp => sp.Items).ThenInclude(i => i.ItemDetails)
+                    .ToListAsync();
                 return View(x);
             }
         }

@@ -9,5 +9,6 @@ namespace WMS.Models
     {
         public string Id { get; set; }
         public ItemDetails ItemDetails { get; set; }
+        public StorageSpace StorageSpace { get; set; }
     }
 }

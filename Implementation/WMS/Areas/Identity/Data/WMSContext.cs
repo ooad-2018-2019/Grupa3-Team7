@@ -29,7 +29,11 @@ namespace WMS.Models
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);            
+            base.OnModelCreating(builder);
+            builder.Entity<Item>()
+                .HasOne(i => i.StorageSpace)
+                .WithMany(sp => sp.Items)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
