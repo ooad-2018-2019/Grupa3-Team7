@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace API.Models
+{
+    public partial class AspNetUsers
+    {
+        public AspNetUsers()
+        {
+            AspNetUserClaims = new HashSet<AspNetUserClaims>();
+            AspNetUserLogins = new HashSet<AspNetUserLogins>();
+            AspNetUserRoles = new HashSet<AspNetUserRoles>();
+            AspNetUserTokens = new HashSet<AspNetUserTokens>();
+            Requests = new HashSet<Requests>();
+            StorageSpaces = new HashSet<StorageSpaces>();
+        }
+
+        public string Id { get; set; }
+        public string UserName { get; set; }
+        public string NormalizedUserName { get; set; }
+        public string Email { get; set; }
+        public string NormalizedEmail { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public string PasswordHash { get; set; }
+        public string SecurityStamp { get; set; }
+        public string ConcurrencyStamp { get; set; }
+        public string PhoneNumber { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
+        public bool TwoFactorEnabled { get; set; }
+        public DateTimeOffset? LockoutEnd { get; set; }
+        public bool LockoutEnabled { get; set; }
+        public int AccessFailedCount { get; set; }
+        public string Discriminator { get; set; }
+        public string FullName { get; set; }
+        public DateTime? HireDate { get; set; }
+        public string FirmName { get; set; }
+        public bool? IsManager { get; set; }
+
+        public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
+        public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
+        public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
+        public virtual ICollection<AspNetUserTokens> AspNetUserTokens { get; set; }
+        public virtual ICollection<Requests> Requests { get; set; }
+        public virtual ICollection<StorageSpaces> StorageSpaces { get; set; }
+    }
+}
