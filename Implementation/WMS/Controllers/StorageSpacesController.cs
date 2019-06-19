@@ -107,6 +107,57 @@ namespace WMS.Controllers
             return View(storageSpace);
         }
 
+        public async Task<IActionResult> Approve(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            StorageSpace storageSpace = await _context.StorageSpaces.FirstOrDefaultAsync(m => m.Id == id);
+
+            if(storageSpace == null)
+            {
+                return NotFound();
+            }
+
+            return View(storageSpace);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Approve(string id, StorageSpace storageSpace)
+        {
+            if (id != storageSpace.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    storageSpace.Available = true;
+                    _context.Entry(storageSpace).Property("Available").IsModified = true;
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!StorageSpaceExists(storageSpace.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(storageSpace);
+        }
+
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)

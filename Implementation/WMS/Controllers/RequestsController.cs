@@ -143,7 +143,8 @@ namespace WMS.Controllers
                 try
                 {
                     request.Processed = true;
-                    _context.Update(request);
+                    //_context.Update(request);
+                    _context.Entry(request).Property("Available").IsModified = true;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
