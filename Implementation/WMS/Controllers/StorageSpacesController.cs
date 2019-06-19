@@ -26,7 +26,7 @@ namespace WMS.Controllers
 
             if (User.IsInRole("Firm"))
             {
-                var res = await _context.StorageSpaces.Where(r => r.Firm.UserName == User.Identity.Name).Include(sp => sp.Firm).ToListAsync();
+                var res = await _context.StorageSpaces.Where(r => r.Firm.UserName == User.Identity.Name).Include(sp => sp.Firm).Include(sp => sp.Items).ToListAsync();
                 return View(res);
             }
             else

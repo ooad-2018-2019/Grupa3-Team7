@@ -15,8 +15,12 @@ namespace WMS.Models
         public double UsedUp {
             get {
                 double usedUp = 0;
-                foreach(Item item in Items) {
-                    usedUp += item.ItemDetails.Volume;
+                if(Items != null)
+                {
+                    foreach (Item item in Items)
+                    {
+                        usedUp += item.ItemDetails.Volume;
+                    }
                 }
                 usedUp /= Capacity;
                 return usedUp;
