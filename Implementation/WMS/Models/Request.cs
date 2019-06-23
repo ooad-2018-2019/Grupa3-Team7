@@ -19,6 +19,6 @@ namespace WMS.Models
         [Required]
         [Display(Name = "Storage Space")]
         public string StorageSpaceId { get; set; }
-        public StorageSpace StorageSpace { get; set; }
+        public virtual StorageSpace StorageSpace { get; set; }
     }
 }

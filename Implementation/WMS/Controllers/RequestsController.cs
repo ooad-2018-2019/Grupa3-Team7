@@ -49,7 +49,7 @@ namespace WMS.Controllers
                 return NotFound();
             }
 
-            var request = await _context.Requests
+            var request = await _context.Requests.Include(r => r.StorageSpace)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (request == null)
             {
