@@ -33,7 +33,7 @@ namespace API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=tcp:ooad-team7.database.windows.net,1433;Initial Catalog=ProjectDatabase;Persist Security Info=False;User ID=team7;Password=The7thHokage!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                optionsBuilder.UseSqlServer("Server=tcp:ooad-team7.database.windows.net,1433;Initial Catalog=ProjectDatabase;Persist Security Info=False;User ID={user};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 
