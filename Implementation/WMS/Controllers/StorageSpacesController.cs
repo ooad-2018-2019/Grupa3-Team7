@@ -74,7 +74,12 @@ namespace WMS.Controllers
                 return NotFound();
             }
 
-            var storageSpace = await _context.StorageSpaces.FirstOrDefaultAsync(m => m.Id == id);
+            var storageSpace = await _context.StorageSpaces.Include(sp => sp.Firm).Include(sp => sp.Items).FirstOrDefaultAsync(m => m.Id == id);
+            foreach ( Item item in storageSpace.Items)
+            {
+                var something = await _context.Items.Include(tempItem => tempItem.ItemDetails).FirstOrDefaultAsync(m => m.Id == item.Id);
+                item.ItemDetails = something.ItemDetails;
+            }
             if (storageSpace == null)
             {
                 return NotFound();
