@@ -10,7 +10,7 @@
 <h4>Import Request</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="CreateImport">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -22,8 +22,17 @@
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
-        <div id="items" class="form-group">
+        <div class="form-group">
+            <select id="itemDetailsSelect">
+                <option disabled selected>Select an item</option>
+            </select>
+            <input id="countSelect" type="number" step="1" min="1" value="0"/>
+            <button id="addItemButton" class="btn-primary">Add Item</button>
         </div>
+        <div id="table">
+
+        </div>
+
     </div>
 </div>
 
@@ -36,37 +45,57 @@
 
     <script type="text/javascript">
 
-    let itemsContainer = document.getElementById("items");
-        let itemDetailsSelect = document.getElementById("itemDetailsSelect");
-        let addItemButton = document.getElementById("addItemButton");
-        let chosenItems = [];
+    let itemDetailsSelect = document.getElementById("itemDetailsSelect");
+    let addItemButton = document.getElementById("addItemButton");
+        let countSelect = document.getElementById("countSelect");
+        let table = document.getElementById("table");
+    let allItems = [];
+    let chosenItems = [];
 
-        addItemButton.addEventListener("click", e => {
-            // e.preventDefault();
-            addItem();
-        });
+    addItemButton.addEventListener("click", e => {
+        // e.preventDefault();
+        addItem();
+    });
 
 
     let url = "https://ooad19team7api.azurewebsites.net/api/itemdetails";
     fetch(url).then(res => {
         res.json().then(data => {
-            console.log(data);
-            init(data);
+            allItems = data;
+            loadToSelect();
         })
     }).catch(err => {
         console.log(err)
     })
 
-    function init(itemDetails) {
-
+    function loadToSelect() {
+        for (let item of allItems) {
+            itemDetailsSelect.innerHTML += `<option value="${item["upc"]}">${item["name"]}</option>`;
+        }
     }
 
     function addItem() {
-        console.log(itemDetailsSelect.value);
+            const data = { count: countSelect.value, upc: itemDetailsSelect.value, name: itemDetailsSelect.options[itemDetailsSelect.selectedIndex].text };
+        let index = chosenItems.findIndex(item => item.upc == data.upc);
+        if (index == -1)
+            chosenItems.push(data);
+        else
+            chosenItems[index].count = new Number(data.count);
 
+        updateTable();
+        }
 
+        function updateTable() {
+            table.innerHTML = "";
+            for (let item of chosenItems) {
+                table.innerHTML += `${item.name} - ${item.count} <button onclick="removeItem('${item.upc}')" class="btn-danger">Remove</button> <br/>`;
+            }
+        }
 
-    }
+        function removeItem(upc) {
+            chosenItems = chosenItems.filter(item => item.upc != upc);
+            updateTable();
+        }
 
     </script>
 }
