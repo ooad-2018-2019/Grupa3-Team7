@@ -45,44 +45,44 @@
 
     <script type="text/javascript">
 
-    let itemDetailsSelect = document.getElementById("itemDetailsSelect");
-    let addItemButton = document.getElementById("addItemButton");
+        let itemDetailsSelect = document.getElementById("itemDetailsSelect");
+        let addItemButton = document.getElementById("addItemButton");
         let countSelect = document.getElementById("countSelect");
         let table = document.getElementById("table");
-    let allItems = [];
-    let chosenItems = [];
+        let allItems = [];
+        let chosenItems = [];
 
-    addItemButton.addEventListener("click", e => {
-        // e.preventDefault();
-        addItem();
-    });
+        addItemButton.addEventListener("click", e => {
+            // e.preventDefault();
+            addItem();
+        });
 
 
-    let url = "https://ooad19team7api.azurewebsites.net/api/itemdetails";
-    fetch(url).then(res => {
-        res.json().then(data => {
-            allItems = data;
-            loadToSelect();
+        let url = "https://ooad19team7api.azurewebsites.net/api/itemdetails";
+        fetch(url).then(res => {
+            res.json().then(data => {
+                allItems = data;
+                loadToSelect();
+            })
+        }).catch(err => {
+            console.log(err)
         })
-    }).catch(err => {
-        console.log(err)
-    })
 
-    function loadToSelect() {
-        for (let item of allItems) {
-            itemDetailsSelect.innerHTML += `<option value="${item["upc"]}">${item["name"]}</option>`;
+        function loadToSelect() {
+            for (let item of allItems) {
+                itemDetailsSelect.innerHTML += `<option value="${item["upc"]}">${item["name"]}</option>`;
+            }
         }
-    }
 
-    function addItem() {
+        function addItem() {
             const data = { count: countSelect.value, upc: itemDetailsSelect.value, name: itemDetailsSelect.options[itemDetailsSelect.selectedIndex].text };
-        let index = chosenItems.findIndex(item => item.upc == data.upc);
-        if (index == -1)
-            chosenItems.push(data);
-        else
-            chosenItems[index].count = new Number(data.count);
+            let index = chosenItems.findIndex(item => item.upc == data.upc);
+            if (index == -1)
+                chosenItems.push(data);
+            else
+                chosenItems[index].count = new Number(data.count);
 
-        updateTable();
+            updateTable();
         }
 
         function updateTable() {
