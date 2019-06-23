@@ -23,7 +23,7 @@ namespace WMS.Models
                     }
                 }
                 usedUp /= Capacity;
-                return usedUp;
+                return usedUp*100;
             }
         }
         public bool Available { get; set; }
