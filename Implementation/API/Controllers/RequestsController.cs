@@ -24,7 +24,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Requests>>> GetRequests()
         {
-            return await _context.Requests.Include(r => r.ItemCounts).ToListAsync();
+            return await _context.Requests.ToListAsync();
         }
 
         // GET: api/Requests/5

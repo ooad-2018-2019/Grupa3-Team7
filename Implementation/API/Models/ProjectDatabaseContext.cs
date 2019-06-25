@@ -33,6 +33,7 @@ namespace API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=tcp:ooad-team7.database.windows.net,1433;Initial Catalog=ProjectDatabase;Persist Security Info=False;User ID=team7;Password=The7thHokage!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
