@@ -77,7 +77,7 @@ namespace WMS.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new Employee { UserName = Input.UserName, Email = Input.Email, FullName = Input.FullName };
+                var user = new Employee { UserName = Input.UserName, Email = Input.Email, FullName = Input.FullName , HireDate = DateTime.Now};
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 await _userManager.AddToRoleAsync(user, "Employee");
                 if (result.Succeeded)
@@ -96,7 +96,7 @@ namespace WMS.Areas.Identity.Pages.Account
 
                     //await _signInManager.SignInAsync(user, isPersistent: false);
                     //return LocalRedirect(returnUrl);
-                    return Redirect("/../../");
+                    return Redirect("/../../Employees");
                 }
                 foreach (var error in result.Errors)
                 {
