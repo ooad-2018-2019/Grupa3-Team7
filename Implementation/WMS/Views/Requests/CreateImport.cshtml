@@ -29,10 +29,23 @@
                 <input type="button" id="addItemButton" class="btn btn-primary" value="Add Item">
             </div>
         </form>
-        <hr />
-        <div id="table">
-
-        </div>
+        <table class="table" style="max-width: 420px">
+            <thead>
+                <tr>
+                    <th>
+                        Item
+                    </th>
+                    <th>
+                        Count
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="table">
+                
+            </tbody>
+            <tbody>
+        </table>
     </div>
 </div>
 
@@ -91,7 +104,17 @@ function addItem() {
 function updateTable() {
     table.innerHTML = "";
     for (let item of chosenItems) {
-        table.innerHTML += `${item.name} - ${item.count} <input type="button" onclick="removeItem('${item.upc}')" class="btn btn-danger" value="Remove"> <br/>`;
+        table.innerHTML += `<tr>
+                <td>
+                    ${item.name}
+                </td>
+                <td>
+                    ${item.count}
+                </td>
+                <td>
+                    <input type="button" onclick="removeItem('${item.upc}')" class="btn btn-danger" value="Remove">
+                </td>
+             </tr>`;
     }
 }
 
@@ -104,7 +127,7 @@ function submitRequest() {
     let data = {};
     data.id = null;
     data.requestDate = "";
-    data.firmId = "@Model.Firm.Id";
+    data.firmId = "@ViewBag.FirmId";
     data.processed = false;
     data.discriminator = "ImportRequest";
     data.itemCounts = "";
