@@ -33,8 +33,8 @@ namespace API.Models
         public string Discriminator { get; set; }
         public string FullName { get; set; }
         public DateTime? HireDate { get; set; }
-        public string FirmName { get; set; }
         public bool? IsManager { get; set; }
+        public string FirmName { get; set; }
 
         public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }

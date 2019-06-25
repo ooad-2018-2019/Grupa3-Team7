@@ -148,11 +148,11 @@ namespace API.Models
 
             modelBuilder.Entity<ItemCounts>(entity =>
             {
-                entity.HasKey(e => e.Count);
-
                 entity.HasIndex(e => e.ItemUpc);
 
                 entity.HasIndex(e => e.RequestId);
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.ItemUpc).HasColumnName("ItemUPC");
 
@@ -192,7 +192,8 @@ namespace API.Models
 
                 entity.HasOne(d => d.StorageSpace)
                     .WithMany(p => p.Items)
-                    .HasForeignKey(d => d.StorageSpaceId);
+                    .HasForeignKey(d => d.StorageSpaceId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Requests>(entity =>
@@ -204,6 +205,8 @@ namespace API.Models
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Discriminator).IsRequired();
+
+                entity.Property(e => e.StorageSpaceId).IsRequired();
 
                 entity.HasOne(d => d.Firm)
                     .WithMany(p => p.Requests)
