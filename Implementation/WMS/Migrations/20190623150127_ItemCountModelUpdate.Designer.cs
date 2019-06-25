@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMS.Models;
 
 namespace WMS.Migrations
 {
     [DbContext(typeof(WMSContext))]
-    partial class WMSContextModelSnapshot : ModelSnapshot
+    [Migration("20190623150127_ItemCountModelUpdate")]
+    partial class ItemCountModelUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,20 +211,20 @@ namespace WMS.Migrations
 
             modelBuilder.Entity("WMS.Models.ItemCount", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("RequestId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("Count");
 
                     b.Property<string>("ItemUPC");
 
-                    b.Property<string>("RequestId");
+                    b.Property<string>("RequestId1");
 
-                    b.HasKey("Id");
+                    b.HasKey("RequestId");
 
                     b.HasIndex("ItemUPC");
 
-                    b.HasIndex("RequestId");
+                    b.HasIndex("RequestId1");
 
                     b.ToTable("ItemCounts");
                 });
@@ -406,7 +408,7 @@ namespace WMS.Migrations
 
                     b.HasOne("WMS.Models.Request")
                         .WithMany("Items")
-                        .HasForeignKey("RequestId");
+                        .HasForeignKey("RequestId1");
                 });
 
             modelBuilder.Entity("WMS.Models.Request", b =>

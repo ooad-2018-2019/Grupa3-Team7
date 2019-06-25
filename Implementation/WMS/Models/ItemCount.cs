@@ -9,9 +9,9 @@ namespace WMS.Models
 {
     public class ItemCount
     {
-        [Key, Column(Order = 0)]
+        public string Id { get; set; }
+        public string RequestId { get; set; }
         public ItemDetails Item { get; set; }
-        [Key, Column(Order = 1)]
         public int Count { get; set; }
     }
 }

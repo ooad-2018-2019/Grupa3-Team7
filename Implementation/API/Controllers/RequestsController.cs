@@ -24,7 +24,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Requests>>> GetRequests()
         {
-            return await _context.Requests.ToListAsync();
+            return await _context.Requests.Include(r => r.ItemCounts).ToListAsync();
         }
 
         // GET: api/Requests/5
@@ -75,6 +75,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Requests>> PostRequests(Requests requests)
         {
+            requests.RequestDate = DateTime.Now;
             _context.Requests.Add(requests);
             try
             {
