@@ -80,11 +80,19 @@ namespace API.Controllers
 
         // POST: api/Requests
         [HttpPost]
-        public async Task<ActionResult<Requests>> PostRequests(Requests requests)
+        public async Task<ActionResult<Requests>> PostRequests([FromBody] Requests requests)
         {
             requests.RequestDate = DateTime.Now;
             var count = await _context.Requests.LongCountAsync();
             requests.Id = "rq" + count;
+
+            for(int i = 0; i < requests.ItemCounts.Count; i++)
+            {
+                ItemCounts itemCounts = requests.ItemCounts.ElementAt(i);
+                itemCounts.RequestId = requests.Id;
+                itemCounts.Id = requests.Id + "-" + i;
+            }
+
             _context.Requests.Add(requests);
             try
             {

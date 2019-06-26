@@ -11,25 +11,23 @@
 <hr />
 <div class="row">
     <div class="col">
-        <form>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group" style="display: inline-block">
-                <label asp-for="StorageSpaceId" class="control-label"></label>
-                <select asp-for="StorageSpaceId" class="form-control" style="max-width: 240px" asp-items="ViewBag.StorageSpace"></select>
-                <span asp-validation-for="StorageSpaceId" class="text-danger"></span>
-            </div>
-        </form>
-            <div class="form-group" style="display: inline-block">
-                <input type="button" value="Create" onclick="submitRequest()" class="btn btn-primary" />
-            </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group" style="display: inline-block">
+            <label asp-for="StorageSpaceId" class="control-label"></label>
+            <select id="storageSpaceSelect" asp-for="StorageSpaceId" class="form-control" style="max-width: 240px" asp-items="ViewBag.StorageSpace"></select>
+            <span asp-validation-for="StorageSpaceId" class="text-danger"></span>
+        </div>
+        <div class="form-group" style="display: inline-block">
+            <input type="button" value="Create" onclick="submitRequest()" class="btn btn-primary" />
+        </div>
         
-            <div class="form-group">
-                <select class="form-control" style="display: inline-block; max-width: 240px" id="itemDetailsSelect">
-                    <option disabled selected value="-1">Select an item</option>
-                </select>
-                <input class="form-control" style="display: inline-block; max-width: 240px" id="countSelect" type="number" step="1" min="1" value="0" />
-                <input type="button" id="addItemButton" class="btn btn-primary" value="Add Item">
-            </div>
+        <div class="form-group">
+            <select class="form-control" style="display: inline-block; max-width: 240px" id="itemDetailsSelect">
+                <option disabled selected value="-1">Select an item</option>
+            </select>
+            <input class="form-control" style="display: inline-block; max-width: 240px" id="countSelect" type="number" step="1" min="1" value="0" />
+            <input type="button" id="addItemButton" class="btn btn-primary" value="Add Item">
+        </div>
         
         <table class="table" style="max-width: 420px">
             <thead>
@@ -61,6 +59,7 @@
 <script type="text/javascript">
 
 let itemDetailsSelect = document.getElementById("itemDetailsSelect");
+let storageSpaceSelect = document.getElementById("storageSpaceSelect");
 let addItemButton = document.getElementById("addItemButton");
 let countSelect = document.getElementById("countSelect");
 let table = document.getElementById("table");
@@ -100,6 +99,8 @@ function addItem() {
     else
         chosenItems[index].count = new Number(data.count);
 
+    countSelect.value = 0;
+
     updateTable();
 }
 
@@ -127,8 +128,9 @@ function removeItem(upc) {
 
 function submitRequest() {
     let request = {};
-    request.id = null;
+    request.id = "tbd";
     request.requestDate = "2014-06-23T00:00:00";
+    request.storageSpaceId = storageSpaceSelect.value;
     request.firmId = "@ViewBag.FirmId";
     request.processed = false;
     request.discriminator = "ImportRequest";
@@ -139,42 +141,30 @@ function submitRequest() {
             "id": "0",
             "requestId": "0",
             "itemUPC": itemCount.upc,
-            "count": itemCount.count
+            "count": new Number(itemCount.count)
         });
     }
+    let postBody = JSON.stringify(request);
+    console.log(postBody);
 
-    let url = "https://localhost:44319/api/requests";
+    let url = "https://ooad19team7api.azurewebsites.net/api/requests";
     let postConfig = {
         headers: { 'Content-Type': 'application/json' },
-        method: "POST",
-        cache: "no-cache",
-        mode: "no-cors",
-        body: JSON.stringify(request)
+        method: 'POST',
+        //cache: "no-cache",
+        //mode: "no-cors",
+        body: postBody
     }
 
     fetch(url, postConfig).then(res => {
-        res.json().then(data => {
-            console.log(data);
-        })
+        console.log(res);
+        document.location.assign("/requests");
     })
     .catch(err => {
         console.log(err)
-        //document.location.assign("/requests");
+        document.location.assign("/requests");
     })
 }
 
 </script>
 }
-
-@* 
-    Valid JSON
-{
-    "id": null,
-    "requestDate": "2014-06-23T00:00:00",
-    "firmId": "61821be8-0644-4a17-8c07-e21f77968b0b",
-    "processed": false,
-    "storageSpaceId": "776de352-e089-41a5-99e1-7f9e3918685f",
-    "discriminator": "ImportRequest",
-    "itemCounts":[{"id":"2","requestId":"rq1","itemUpc":"e3ff1d65-0a5a-4899-aa91-39b57fcb5e99","count":5}]
-}    
-*@

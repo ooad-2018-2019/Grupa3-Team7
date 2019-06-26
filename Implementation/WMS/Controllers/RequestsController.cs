@@ -67,7 +67,7 @@ namespace WMS.Controllers
         public IActionResult CreateImport()
         {
             var storageSpaces = _context.StorageSpaces.Where(sp => sp.Firm.UserName == User.Identity.Name && sp.Available);
-            ViewBag.FirmId = _context.Firms.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            ViewBag.FirmId = _context.Firms.Where(u => u.UserName == User.Identity.Name).FirstOrDefault().Id;
             ViewBag.StorageSpace = new SelectList(storageSpaces, "Id", "Name");
             return View();
         }
@@ -75,7 +75,7 @@ namespace WMS.Controllers
         public IActionResult CreateExport()
         {
             var storageSpaces = _context.StorageSpaces.Where(sp => sp.Firm.UserName == User.Identity.Name && sp.Available);
-            ViewBag.FirmId = _context.Firms.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            ViewBag.FirmId = _context.Firms.Where(u => u.UserName == User.Identity.Name).FirstOrDefault().Id;
             ViewBag.StorageSpace = new SelectList(storageSpaces, "Id", "Name");
             return View();
         }
