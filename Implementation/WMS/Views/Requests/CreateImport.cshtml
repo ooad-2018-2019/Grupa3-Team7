@@ -7,7 +7,7 @@
 
 <h1>Create</h1>
 
-<h4>Import Request</h4>
+<h4 id="desc">ImportRequest</h4>
 <hr />
 <div class="row">
     <div class="col">
@@ -55,116 +55,6 @@
 
 @section Scripts {
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-<script type="text/javascript">
-
-let itemDetailsSelect = document.getElementById("itemDetailsSelect");
-let storageSpaceSelect = document.getElementById("storageSpaceSelect");
-let addItemButton = document.getElementById("addItemButton");
-let countSelect = document.getElementById("countSelect");
-let table = document.getElementById("table");
-let allItems = [];
-let chosenItems = [];
-
-addItemButton.addEventListener("click", e => {
-    // e.preventDefault();
-    addItem();
-});
-
-
-let url = "https://ooad19team7api.azurewebsites.net/api/itemdetails";
-fetch(url).then(res => {
-    res.json().then(data => {
-        allItems = data;
-        loadToSelect();
-    })
-}).catch(err => {
-    console.log(err)
-})
-
-function loadToSelect() {
-    for (let item of allItems) {
-        itemDetailsSelect.innerHTML += `<option value="${item["upc"]}">${item["name"]}</option>`;
-    }
+@{await Html.RenderPartialAsync("./_RequestCreateScript");}
 }
 
-function addItem() {
-    if (itemDetailsSelect.value == -1)
-        return;
-
-    const data = { count: countSelect.value, upc: itemDetailsSelect.value, name: itemDetailsSelect.options[itemDetailsSelect.selectedIndex].text };
-    let index = chosenItems.findIndex(item => item.upc == data.upc);
-    if (index == -1)
-        chosenItems.push(data);
-    else
-        chosenItems[index].count = new Number(data.count);
-
-    countSelect.value = 0;
-
-    updateTable();
-}
-
-function updateTable() {
-    table.innerHTML = "";
-    for (let item of chosenItems) {
-        table.innerHTML += `<tr>
-                <td>
-                    ${item.name}
-                </td>
-                <td>
-                    ${item.count}
-                </td>
-                <td>
-                    <input type="button" onclick="removeItem('${item.upc}')" class="btn btn-danger" value="Remove">
-                </td>
-             </tr>`;
-    }
-}
-
-function removeItem(upc) {
-    chosenItems = chosenItems.filter(item => item.upc != upc);
-    updateTable();
-}
-
-function submitRequest() {
-    let request = {};
-    request.id = "tbd";
-    request.requestDate = "2014-06-23T00:00:00";
-    request.storageSpaceId = storageSpaceSelect.value;
-    request.firmId = "@ViewBag.FirmId";
-    request.processed = false;
-    request.discriminator = "ImportRequest";
-    request.itemCounts = [];
-
-    for (let itemCount of chosenItems) {
-        request.itemCounts.push({
-            "id": "0",
-            "requestId": "0",
-            "itemUPC": itemCount.upc,
-            "count": new Number(itemCount.count)
-        });
-    }
-    let postBody = JSON.stringify(request);
-    console.log(postBody);
-
-    let url = "https://ooad19team7api.azurewebsites.net/api/requests";
-    let postConfig = {
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-        //cache: "no-cache",
-        //mode: "no-cors",
-        body: postBody
-    }
-
-    fetch(url, postConfig).then(res => {
-        console.log(res);
-        document.location.assign("/requests");
-    })
-    .catch(err => {
-        console.log(err)
-        document.location.assign("/requests");
-    })
-}
-
-</script>
-}

@@ -7,25 +7,45 @@
 
 <h1>Create</h1>
 
-<h4>Export Request</h4>
+<h4 id="desc">ExportRequest</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="CreateExport">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="StorageSpaceId" class="control-label"></label>
-                <select asp-for="StorageSpaceId" class="form-control" asp-items="ViewBag.StorageSpace"></select>
-                <span asp-validation-for="StorageSpaceId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="col">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group" style="display: inline-block">
+            <label asp-for="StorageSpaceId" class="control-label"></label>
+            <select id="storageSpaceSelect" asp-for="StorageSpaceId" class="form-control" style="max-width: 240px" asp-items="ViewBag.StorageSpace"></select>
+            <span asp-validation-for="StorageSpaceId" class="text-danger"></span>
+        </div>
+        <div class="form-group" style="display: inline-block">
+            <input type="button" value="Create" onclick="submitRequest()" class="btn btn-primary" />
+        </div>
+
+        <div class="form-group">
+            <select class="form-control" style="display: inline-block; max-width: 240px" id="itemDetailsSelect">
+                <option disabled selected value="-1">Select an item</option>
+            </select>
+            <input class="form-control" style="display: inline-block; max-width: 240px" id="countSelect" type="number" step="1" min="1" value="0" />
+            <input type="button" id="addItemButton" class="btn btn-primary" value="Add Item">
+        </div>
+
+        <table class="table" style="max-width: 420px">
+            <thead>
+                <tr>
+                    <th>
+                        Item
+                    </th>
+                    <th>
+                        Count
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="table"></tbody>
+            <tbody>
+        </table>
     </div>
 </div>
-
-
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -33,4 +53,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("./_RequestCreateScript");}
 }
