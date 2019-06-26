@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WMS.Models;
@@ -10,6 +11,7 @@ using WMS.Models;
 
 namespace WMS.Controllers
 {
+    [Authorize(Roles ="Manager")]
     public class WarehousesController : Controller
     {
 
@@ -25,6 +27,38 @@ namespace WMS.Controllers
         {
             var res = await _context.Warehouses.ToListAsync();
 
+            if (res != null && res.Count == 0)
+            {
+                Warehouse warehouse = new Warehouse();
+                warehouse.Name = "";
+                warehouse.Adress = "";
+                warehouse.Capacity = 100;
+                warehouse.UsedUp = 0;
+                _context.Warehouses.Add(warehouse);
+                await _context.SaveChangesAsync();
+                return View(warehouse);
+            }
+            else if(res != null && res.Count >0)
+            {
+                Warehouse warehouse = res.First();
+                warehouse.UsedUp = 0;
+                var storageCapacities = await _context.StorageSpaces.Select(m => m.Capacity).ToListAsync();
+                foreach (var storageCapacity in storageCapacities)
+                {
+                    warehouse.UsedUp += storageCapacity;
+                }
+                warehouse.UsedUp /= warehouse.Capacity;
+                warehouse.UsedUp *= 100;
+                return View(warehouse);
+            }
+            return Redirect("/../Home");
+        }
+
+
+        public async Task<IActionResult> Edit()
+        {
+            var res = await _context.Warehouses.ToListAsync();
+
             if (res == null || res.Count == 0)
             {
                 Warehouse warehouse = new Warehouse();
@@ -36,18 +70,21 @@ namespace WMS.Controllers
             else
             {
                 Warehouse warehouse = res.First();
-                warehouse.UsedUp = 0;
-                var storages = await _context.StorageSpaces.ToListAsync();
-                foreach (var storage in storages)
-                {
-                    warehouse.UsedUp += storage.Capacity;
-                }
-                warehouse.UsedUp /= warehouse.Capacity;
-                warehouse.UsedUp *= 100;
                 return View(warehouse);
             }
-            return View();
+            return Redirect("/../Home");
         }
+
+
+        public async Task<IActionResult> EditConfirmed(Warehouse warehouse)
+        {
+            _context.Warehouses.Update(warehouse);
+            await _context.SaveChangesAsync();
+            return Redirect("/../Home");
+        }
+
+
+
 
 
 
