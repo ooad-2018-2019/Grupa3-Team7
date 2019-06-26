@@ -18,9 +18,11 @@
                 <select asp-for="StorageSpaceId" class="form-control" style="max-width: 240px" asp-items="ViewBag.StorageSpace"></select>
                 <span asp-validation-for="StorageSpaceId" class="text-danger"></span>
             </div>
+        </form>
             <div class="form-group" style="display: inline-block">
-                <input type="submit" value="Create" onclick="submitRequest" class="btn btn-primary" />
+                <input type="button" value="Create" onclick="submitRequest()" class="btn btn-primary" />
             </div>
+        
             <div class="form-group">
                 <select class="form-control" style="display: inline-block; max-width: 240px" id="itemDetailsSelect">
                     <option disabled selected value="-1">Select an item</option>
@@ -28,7 +30,7 @@
                 <input class="form-control" style="display: inline-block; max-width: 240px" id="countSelect" type="number" step="1" min="1" value="0" />
                 <input type="button" id="addItemButton" class="btn btn-primary" value="Add Item">
             </div>
-        </form>
+        
         <table class="table" style="max-width: 420px">
             <thead>
                 <tr>
@@ -124,13 +126,41 @@ function removeItem(upc) {
 }
 
 function submitRequest() {
-    let data = {};
-    data.id = null;
-    data.requestDate = "";
-    data.firmId = "@ViewBag.FirmId";
-    data.processed = false;
-    data.discriminator = "ImportRequest";
-    data.itemCounts = "";
+    let request = {};
+    request.id = null;
+    request.requestDate = "2014-06-23T00:00:00";
+    request.firmId = "@ViewBag.FirmId";
+    request.processed = false;
+    request.discriminator = "ImportRequest";
+    request.itemCounts = [];
+
+    for (let itemCount of chosenItems) {
+        request.itemCounts.push({
+            "id": "0",
+            "requestId": "0",
+            "itemUPC": itemCount.upc,
+            "count": itemCount.count
+        });
+    }
+
+    let url = "https://localhost:44319/api/requests";
+    let postConfig = {
+        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        cache: "no-cache",
+        mode: "no-cors",
+        body: JSON.stringify(request)
+    }
+
+    fetch(url, postConfig).then(res => {
+        res.json().then(data => {
+            console.log(data);
+        })
+    })
+    .catch(err => {
+        console.log(err)
+        //document.location.assign("/requests");
+    })
 }
 
 </script>

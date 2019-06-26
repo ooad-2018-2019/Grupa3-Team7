@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WMS.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -23,7 +24,7 @@ namespace WMS.Controllers
         // GET: /<controller>/
         public async Task<IActionResult> Index()
         {
-            var res = _context.Employees.ToList();
+            var res = await _context.Employees.ToListAsync();
             return View(res);
         }
 
@@ -40,7 +41,7 @@ namespace WMS.Controllers
                 {
                     _context.Employees.Remove(employee);
                     await _context.SaveChangesAsync();
-                }catch(Exception e)
+                }catch(Exception)
                 {
                     RedirectToAction("Index");
                 }
