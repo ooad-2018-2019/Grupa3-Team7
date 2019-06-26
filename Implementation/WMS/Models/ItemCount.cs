@@ -11,6 +11,7 @@ namespace WMS.Models
     {
         public string Id { get; set; }
         public string RequestId { get; set; }
+        public Request Request { get; set; }
         public ItemDetails Item { get; set; }
         public int Count { get; set; }
     }

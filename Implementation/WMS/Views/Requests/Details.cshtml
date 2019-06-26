@@ -30,6 +30,47 @@
             @Html.DisplayFor(model => model.StorageSpace.Name)
         </dd>
     </dl>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Item.ImageURI)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Item.UPC)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Item.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.FirstOrDefault().Count)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items != null)
+            {
+                foreach (var item in Model.Items)
+                {
+            <tr>
+                <td>
+                    <img style="max-width:64px" src="@Html.DisplayFor(model => item.Item.ImageURI)" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Item.UPC)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     <a asp-action="Index">Back to List</a>

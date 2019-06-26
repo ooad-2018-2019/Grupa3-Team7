@@ -24,7 +24,14 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Requests>>> GetRequests()
         {
-            return await _context.Requests.ToListAsync();
+            var requests = await _context.Requests.ToListAsync();
+            foreach(Requests request in requests)
+            {
+                var itemCounts = _context.ItemCounts.Where(ic => ic.RequestId == request.Id).Include(ic => ic.ItemUpcNavigation).ToListAsync();
+                request.ItemCounts = await itemCounts;
+            }
+
+            return requests;
         }
 
         // GET: api/Requests/5
@@ -76,6 +83,8 @@ namespace API.Controllers
         public async Task<ActionResult<Requests>> PostRequests(Requests requests)
         {
             requests.RequestDate = DateTime.Now;
+            var count = await _context.Requests.LongCountAsync();
+            requests.Id = "rq" + count;
             _context.Requests.Add(requests);
             try
             {

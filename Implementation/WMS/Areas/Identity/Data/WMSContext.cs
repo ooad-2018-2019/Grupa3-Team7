@@ -34,6 +34,10 @@ namespace WMS.Models
                 .HasOne(i => i.StorageSpace)
                 .WithMany(sp => sp.Items)
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Request>()
+                .HasMany(r => r.Items)
+                .WithOne(ic => ic.Request)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
