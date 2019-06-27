@@ -208,7 +208,40 @@ namespace WMS.Controllers
             try
             {
                 request = _context.ExportRequests.Include(r => r.StorageSpace).Include(r => r.Items).Single(r => r.Id == id);
+                request.StorageSpace = _context.StorageSpaces.Single(sp => sp.Id == request.StorageSpaceId);
+                var itemCounts = new List<ItemCount>();
+
+                bool requestValid = true;
+                for (int i = 0; i < request.Items.Count; i++)
+                {
+                    ItemCount itemCount = _context.ItemCounts.Include(ic => ic.Item).Single(ic => ic.Id == request.Items.ElementAt(i).Id);
+                    var numOfItemsOfThisType = _context.Items.Where(item => item.ItemDetails.UPC == itemCount.Item.UPC && item.StorageSpace.Id == request.StorageSpaceId).ToList().Count;
+                    //if (itemCount.Count > numOfItemsOfThisType)
+                    //{
+                    //    requestValid = false;
+                    //    break;
+                    //}
+                    itemCounts.Add(itemCount);
+                }
+                
+                //if (requestValid)
+                //{
+                //    _context.Requests.Remove(request);
+                //    await _context.SaveChangesAsync();
+                //    return RedirectToAction(nameof(Index));
+                //}
+
                 request.Processed = true;
+                for (int i = 0; i < itemCounts.Count; i++)
+                {
+                    ItemCount itemCount = itemCounts.ElementAt(i);
+                    var toRemove = _context.Items.Where(item => item.ItemDetails.UPC == itemCount.Item.UPC && item.StorageSpace.Id == request.StorageSpaceId).ToList();
+                    for (int j = 0; j < itemCount.Count; j++)
+                    {
+                        _context.Items.Remove(toRemove.ElementAt(i));
+                    }
+                }
+
                 _context.Entry(request).Property("Processed").IsModified = true;
                 await _context.SaveChangesAsync();
             }
