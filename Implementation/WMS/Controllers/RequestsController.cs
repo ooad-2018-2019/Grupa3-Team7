@@ -119,8 +119,8 @@ namespace WMS.Controllers
                 return NotFound();
             }
 
-            ImportRequest import = await _context.ImportRequests.FirstOrDefaultAsync(m => m.Id == id);
-            ExportRequest export = await _context.ExportRequests.FirstOrDefaultAsync(m => m.Id == id);
+            ImportRequest import = await _context.ImportRequests.Include(r => r.StorageSpace).Include(r => r.Items).FirstOrDefaultAsync(m => m.Id == id);
+            ExportRequest export = await _context.ExportRequests.Include(r => r.StorageSpace).Include(r => r.Items).FirstOrDefaultAsync(m => m.Id == id);
 
             if(import != null)
             {
@@ -138,37 +138,92 @@ namespace WMS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Approve(string id, ImportRequest request)
+        public async Task<IActionResult> ApproveImport(string id, ImportRequest request)
         {
             if (id != request.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                request = _context.ImportRequests.Include(r => r.StorageSpace).Include(r => r.Items).Single(r => r.Id == id);
+                request.StorageSpace = _context.StorageSpaces.Single(sp => sp.Id == request.StorageSpaceId);
+                var itemCounts = new List<ItemCount>();
+
+                var capacity = 0.0;
+                for (int i = 0; i < request.Items.Count; i++)
                 {
-                    request.Processed = true;
-                    //_context.Update(request);
-                    _context.Entry(request).Property("Available").IsModified = true;
+                    ItemCount itemCount = _context.ItemCounts.Include(ic => ic.Item).Single(ic => ic.Id == request.Items.ElementAt(i).Id);
+                    capacity += itemCount.Item.Volume;
+                    itemCounts.Add(itemCount);
+                }
+
+                bool requestValid = capacity > request.StorageSpace.Capacity * (1 - request.StorageSpace.UsedUp/100.0);
+                if (requestValid)
+                {
+                    _context.Requests.Remove(request);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+
+                request.Processed = true;
+                for(int i = 0; i < itemCounts.Count; i++)
                 {
-                    if (!RequestExists(request.Id))
+                    ItemCount itemCount = itemCounts.ElementAt(i);
+                    for (int j = 0; j < itemCount.Count; j++)
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        string itemID = itemCount.Item.UPC + "-" + DateTime.Now.Ticks + j;
+                        Item item = new Item { Id = itemID, ItemDetails = itemCount.Item, StorageSpace = request.StorageSpace };
+                        _context.Items.Add(item);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                _context.Entry(request).Property("Processed").IsModified = true;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RequestExists(request.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ApproveExport(string id, ExportRequest request)
+        {
+            if (id != request.Id)
+            {
+                return NotFound();
             }
 
-            return View(request);
+            try
+            {
+                request = _context.ExportRequests.Include(r => r.StorageSpace).Include(r => r.Items).Single(r => r.Id == id);
+                request.Processed = true;
+                _context.Entry(request).Property("Processed").IsModified = true;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RequestExists(request.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Requests/Delete/5

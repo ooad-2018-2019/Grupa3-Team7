@@ -20,5 +20,7 @@ namespace WMS.Models
         [Display(Name = "Storage Space")]
         public string StorageSpaceId { get; set; }
         public virtual StorageSpace StorageSpace { get; set; }
+
+        public virtual bool isValid() { return false; }
     }
 }

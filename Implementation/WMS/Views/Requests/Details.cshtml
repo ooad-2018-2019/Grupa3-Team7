@@ -12,6 +12,12 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
+            Request Type
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GetType().Name)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.RequestDate)
         </dt>
         <dd class="col-sm-10">
